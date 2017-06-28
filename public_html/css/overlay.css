@@ -1,0 +1,250 @@
+#overlay {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 10;
+	display: none;
+	cursor: pointer;
+	opacity: 0;
+
+}
+
+#loading {
+	background: white;
+	position: fixed;
+	bottom: 5px;
+	right: 5px;
+	padding: 10px;
+	border: 2px solid black;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	z-index: 200;
+}
+.loadingText {
+	margin: 15px 5px;
+	float: right;
+}
+.overlayhat {
+	position: relative;
+	top: -10px;
+	height:10px;
+	width:100%;
+	background: url(../images/top.png) repeat-x top;
+}
+
+.overlayboots{
+	position:relative;
+	top:10px;
+	height:10px;
+	width:100%;
+	background: url(../images/bottom.png) repeat-x bottom;
+}
+.overlaywrap
+{
+	width: 510px;
+}
+.overlay-content {
+	display: none;
+	opacity: 0;
+	position: fixed;
+	/*background: -webkit-repeating-linear-gradient(left top, rgb(250,250,250), rgb(200,255,255)); /* For Safari 5.1 to 6.0 */
+ 	/*background: -o-repeating-linear-gradient(bottom right, rgb(250,250,250), rgb(200,255,255)); /* For Opera 11.1 to 12.0 */
+  	/*background: -moz-repeating-linear-gradient(bottom right, rgb(250,250,250), rgb(200,255,255)); /* For Firefox 3.6 to 15 */
+  	/*background: repeating-linear-gradient(bottom right, rgb(250,250,250), rgb(200,255,255)); /* Standard syntax */
+	background: url(../images/bottomGradient.png) repeat-x bottom white;
+	border: none;
+	left: 50%;
+	width: 510px;
+	margin-left: -250px;
+	margin-top: 20px;
+	z-index: 100;
+}
+
+.overlay-form {
+	text-align: center;
+}
+
+.separator {
+	width: 100%;
+	clear: both;
+}
+
+.cancel-overlay {
+	position: absolute;
+	right: 5px;
+	font-size: 1.5em;
+}
+
+.task {
+	margin: 5px 5px 0 5px;
+	width: auto;
+
+	border: 1px solid black;
+	background: white /*rgb(200,250,250)*/;
+
+
+}
+.task p{
+	font-size: smaller;
+	margin: 10px;
+	
+}
+.task select {
+	width: 90%;
+	margin-left: 12px;
+}
+
+.task label {
+	display: inline-block;
+
+	float: left;
+}
+
+.removetask {
+	
+}
+
+.form-group input[type="radio"]{
+	width: initial;
+	margin: 0 1em;
+}
+
+.form-group input.tprice {
+	display: inline-block;
+	width: 30%;
+}
+
+input#ccustno, input#tticketno, input#pticketno {
+	background: none;
+	border:	none;
+	float: right;
+	text-align: right;
+	margin: 1em 0;
+	color: inherit;
+}
+
+textarea.overlay-message, textarea.overlay-message:focus {
+	resize:none;
+	width: 400px;
+	border: none;
+	background: none;
+	font-family: monospace;
+	margin: 0 auto;
+	outline: 0;
+}
+
+textarea#phistory {
+	width:300px;
+}
+
+
+.form-group {
+
+	display: inline-block;
+	width: 40%;
+	text-align: left;
+	padding: 0 10px 10px 10px;
+}
+
+#ticketleft {
+	width:35%;
+	float: left;
+}
+
+#ticketright {
+	width:55%;
+	float: left;
+}
+.form-group input {
+	width: 100%;
+	height: 1em;
+}
+
+.task div p.checks {
+	display: none;
+}
+input.tcomplete {
+	width: initial;
+	margin-left: 10px;
+}
+
+#task-list {
+	position: relative;
+	border: 1px black /* rgb(120,160,160) */ solid;
+	height: 300px;
+	width: 100%;
+}
+
+#tasks {
+	height:inherit;
+	overflow: auto;
+}
+
+#tnotes {
+	resize: none;
+	border: 1px black /* rgb(120,160,160) */ solid;
+	margin-bottom: 6px;
+	width: 100%;
+}
+
+.task-button {
+	position: absolute;
+	bottom: 0;
+	font-size: 15px;
+	height: 25px;
+	width: 100%;
+	color: rgb(20,20,200);
+	background: -webkit-repeating-linear-gradient( rgb(250,255,255), rgb(220,220,220)); /* For Safari 5.1 to 6.0 */
+ 	background: -o-repeating-linear-gradient(rgb(250,255,255), rgb(220,220,220)); /* For Opera 11.1 to 12.0 */
+  	background: -moz-repeating-linear-gradient(rgb(250,255,255), rgb(220,220,220)); /* For Firefox 3.6 to 15 */
+  	background: repeating-linear-gradient(rgb(250,255,255), rgb(220,220,220)); /* Standard syntax */
+	border: 1px black /* rgb(120,160,160) */ solid;
+}
+
+.form-button {
+	font-size: 18px;
+	font-weight: bold;
+	color: rgb(20,20,200);
+	display: inline-block;
+	margin-top: 10px;
+	height: 35px;
+	width: 100%;
+	background: -webkit-repeating-linear-gradient( rgb(250,255,255), rgb(220,220,220)); /* For Safari 5.1 to 6.0 */
+ 	background: -o-repeating-linear-gradient(rgb(250,255,255), rgb(220,220,220)); /* For Opera 11.1 to 12.0 */
+  	background: -moz-repeating-linear-gradient(rgb(250,255,255), rgb(220,220,220)); /* For Firefox 3.6 to 15 */
+  	background: repeating-linear-gradient(rgb(250,255,255), rgb(220,220,220)); /* Standard syntax */
+	border: 1px black /* rgb(120,160,160) */ solid;
+}
+.form-button:hover, .task-button:hover {
+	background-color: #E8E8E8;
+
+}
+
+.form-button:active , .task-button:active {
+	background-color: #B0B0B0;
+	color: red;
+}
+.form-button:disabled {
+	color: rgb(200,200,255);
+}
+
+.form-label {
+	display: inline-block;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.method-label {
+	width: initial;
+}
+
+
+.ui-autocomplete-input {
+	z-index: 100;
+}

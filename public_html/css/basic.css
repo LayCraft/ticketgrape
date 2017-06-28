@@ -1,0 +1,201 @@
+/* This is only generic styling for page structure. 
+
+Logo colours:
+
+Blue #349CD7
+Yellow #F9AF1D
+Red #E73723
+
+*/
+
+/* this clears stupid padding issues from various browsers. Knock out the margin and padding then add it back in manually instead of letting browsers guess what you want. */
+* {margin:0; padding:0; font-family:'Menlo',sans-serif; border-collapse:collapse;vertical-align: top;}
+
+/*These style elements are for general element styles*/
+body {
+    /*background:url(http://i.imgur.com/qKsVr.png); */
+    /*background: -webkit-linear-gradient(rgb(170,200,200),rgb(120,185,190),rgb(170,200,200));  For Safari 5.1 to 6.0 */
+ 	/*background: -o-linear-gradient(rgb(170,200,200),rgb(120,185,190),rgb(170,200,200));  For Opera 11.1 to 12.0 */
+  	/*background: -moz-linear-gradient(rgb(170,200,200),rgb(120,175,190),rgb(170,200,200));  For Firefox 3.6 to 15 */
+  	/* background: linear-gradient(rgb(170,200,200),rgb(120,185,190),rgb(170,200,200)); Standard syntax */
+  	/*background-color: rgb(120,180,190);*/
+  	background: url(../images/wood.png) repeat;
+	}	
+h3{
+	margin: 10px;
+}
+h2{
+	margin: 10px;
+}
+a {
+    text-decoration: none;
+    font-weight: bolder;
+    color: #349CD7;
+	cursor: pointer;
+	}
+a:link{}
+a:visited{}
+a:active{}
+a:hover{
+	color: #F9AF1D;
+	}
+	
+/*Make checkboxes bigger*/
+input[type=checkbox]{
+	border: solid 1px black;
+  	/* Double-sized Checkboxes */
+  	-ms-transform: scale(2); /* IE */
+  	-moz-transform: scale(2); /* FF */
+ 	-webkit-transform: scale(2); /* Safari and Chrome */
+  	-o-transform: scale(2); /* Opera */
+	margin: 0 15px 0 0;
+	}
+
+input[type=text]{padding: 5px 0;}
+input[type=tel]{padding: 5px 0;}
+input[type=email]{padding: 5px 0;}
+
+
+/*These style elements are one-off ID elements that construct page layout.*/
+#wrapper{
+	width:90%; 
+	min-width: 400px;
+	height: 100%; 
+	margin: 0 auto;
+	padding: 10px;
+	}
+
+#banner{
+	background: url(../images/bottomGradient.png) repeat-x bottom white;
+	width:100%;
+	height:150px;
+
+	}
+/*the logo has padding to keep it from touching the edges of the header.*/
+#banner img{
+	padding: 10px;
+	}
+	
+.bannerBoots {
+	height:10px;
+	width:100%;
+	background: url(../images/bottom.png) repeat-x bottom;
+}
+
+/* the #body div is the container where all the tickets/content divs are injected.*/
+#body {}
+.content{
+	background:url(../images/white.png);
+	width:100%;
+
+	float:left;
+	margin: 5px 0;
+	}
+/* button that minimizes a collapsible div inside a content div */
+a.minimizeContent {
+
+}
+.ticketlisthead{
+  	background: white;
+	opacity: 0.6;
+	padding: 10px 0;
+	color: black /*rgb(69,100,100)*/;
+	border-bottom: 2px black solid;
+	}
+	
+#footer{
+	background: url(../images/bottomGradient.png) repeat-x bottom white;
+	clear: both;
+	width:100%; 
+	height: 40px;
+
+	margin: 0;
+	float:right;
+	}
+#footer p{
+	margin: 10px;
+	text-align: center;
+	}
+.footerHat{
+	clear: both;
+	height:10px;
+	width:100%;
+	background: url(../images/top.png) repeat-x top;
+}
+
+
+/* cross is the button for adding new tickets. */
+#cross{
+	position: fixed;
+	right: 0;
+	top: 85px;
+		font-size: 150%;
+	color: #349CD7;
+	padding: 20px;
+	background-color: white;
+	border: 2px #349CD7 solid;
+	text-align: center;
+	z-index: 1;
+    box-sizing: border-box;
+	-webkit-border-radius: 30px;
+	-webkit-border-bottom-right-radius: 0;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius: 30px;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-topright: 0;
+	border-radius: 30px;
+	border-bottom-right-radius: 0;
+	border-top-right-radius: 0;
+}
+#cross:hover{
+	
+	background-color: white;
+	border: 2px outset #F9AF1D;
+	text-align: center;
+    box-sizing: border-box;
+	color: #F9AF1D;
+}
+
+/* cross is the button for adding new tickets. */
+#settings{
+	z-index: 1;
+	position: fixed;
+	right: 0;
+	top: 20px;
+	font-size: 200%;
+	color: #F9AF1D;
+	padding: 0px 10px;
+	background-color: white;
+	border: 2px #F9AF1D solid;
+	text-align: center;
+	
+    box-sizing: border-box;
+	-webkit-border-radius: 30px;
+	-webkit-border-bottom-right-radius: 0;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius: 30px;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-topright: 0;
+	border-radius: 30px;
+	border-bottom-right-radius: 0;
+	border-top-right-radius: 0;
+}
+#settings:hover{
+	
+	background-color: white;
+	border: 2px outset #349CD7;
+	text-align: center;
+    box-sizing: border-box;
+	color: #349CD7;
+}
+
+
+
+
+h3 a:hover{
+	color: #F9AF1D;
+}
+
+/* this is a shortcut for trying divs floating. Just set class to lefty or righty to see it float.*/
+.lefty{float:left; margin:0 10px 0 0;}
+.righty{float:right; margin: 0 0 0 10px;}

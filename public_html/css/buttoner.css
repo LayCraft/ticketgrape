@@ -1,0 +1,19 @@
+/*This can be deleted as it is no longer used*/
+
+#bigbuttoner{
+	float: right;
+	width: 120px;
+	height: 120px;
+		border: 2px solid black;
+	text-align: center;
+    box-sizing: border-box;
+	
+	-webkit-border-radius: 30px;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius: 30px;
+	-moz-border-radius-topright: 0;
+	border-radius: 30px;
+	border-top-right-radius: 0;
+	}
+
+.littlebuttoner{}

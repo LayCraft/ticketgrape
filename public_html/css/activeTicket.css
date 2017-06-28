@@ -1,0 +1,65 @@
+/* This is styling for the active ticket component. */
+
+/*the tickethead class outlines the style elements for the parts of the tickets that have an underline under them. */
+
+#openTickets, #completedTickets {
+	text-align: center;
+}
+
+.ticketWrapper{
+	text-align: left;
+	width: 380px;
+	display:inline-block;
+	padding: 0 10px;
+}
+.tickethead{
+  	background: white;
+	padding: 10px 0;
+	color: black /*rgb(69,100,100)*/;
+	border-bottom: 2px black solid;
+	}
+
+.tickethead p{
+	display: inline;
+	}
+	
+.tickethead .button{
+	float: right;
+	margin-left: 10px;
+	}
+	
+.ticketbody{
+  	background: white;
+	float: none;
+	background: url(../images/bottomGradient.png) repeat-x bottom white;
+	padding: 10px 0;
+	}
+.ticketbody p{
+	padding: 10px 20px;
+	}
+.ticketbody checkbox{
+	padding: 10px 20px;
+}
+.ticketbody tr,td,tbody,table{
+	padding: 10px;
+	margin:0;
+	text-align:left;
+	}
+.ticketbody th{
+	border-bottom: 2px solid;
+	}
+.ticketbody table{
+	width: 100%;
+	border:0;
+	}
+.tickethat{
+	height:10px;
+	width:100%;
+	background: url(../images/top.png) repeat-x top;
+}
+.ticketboots{
+	height:10px;
+	width:100%;
+	background: url(../images/bottom.png) repeat-x bottom;
+}
+	

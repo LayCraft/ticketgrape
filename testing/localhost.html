@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<!-- style for basic page layout elements -->
+		<link rel="stylesheet" href="localhost_files/basic.css">
+		<!-- style for active tickets and stubs in the main list-->
+		<link rel="stylesheet" href="localhost_files/activeTicket.css">
+		<!-- style for ticket add/edit window -->
+		<link rel="stylesheet" href="localhost_files/overlay.css">
+		<link rel="stylesheet" href="localhost_files/jquery-ui_003.css">
+		<link rel="stylesheet" href="localhost_files/jquery-ui.css">
+		<link rel="stylesheet" href="localhost_files/jquery-ui_002.css">
+		<link rel="stylesheet" href="localhost_files/jquery.css">
+		<script src="localhost_files/jquery-1.js"></script>
+		<script src="localhost_files/jquery-ui.js"></script>
+		<script src="localhost_files/jquery.js"></script>
+		<script src="localhost_files/overlay.js"></script>
+		<script src="localhost_files/main.js"></script>
+	</head>
+	<body>
+		<!-- Start of overlay -->
+		<div id="overlay"></div>
+		<div id="createticket" class="overlay-content">
+			<a class="cancel-overlay" onclick="closeOverlay()">x</a>
+			<form class="overlay-form" id="ticketform" method="post" action="/index.php">
+				<h2 class="tickethead">New Ticket <input id="tticketno" readonly="readonly" tabindex="=1" type="text"></h2>
+				<div class="form-group">
+					<label class="form-label">Phone Number</label>
+					<!-- autocomp requires jquery-ui.js -->
+					<input onkeyup="autoComp()" id="tphone" autocomplete="off" type="text">
+					<button onclick="lookUp()" type="button">Lookup</button>
+					<label class="form-label">Name</label>
+					<input id="tname" disabled="disabled" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Customer#</label>
+					<input id="tcustno" readonly="readonly" type="text">
+					<label class="form-label">Date Due</label>
+					<input class="hasDatepicker" id="tduedate" value="2015-06-07" type="text">
+					<input class="hasTimepicker" id="tduetime" style="height:initial;" value="15:00" type="time">
+				</div>
+				<div class="separator"></div>
+				<div class="form-group">
+					<label class="form-label">Tasks</label>
+					<div id="task-list">
+						<div id="tasks"></div>
+						<div id="task-buttons">
+							<!-- addTask and removeTask is in overlay.js -->
+							<button class="task-button" onclick="addTask()" type="button">New Task</button>
+							<button class="task-button" onclick="removeTask()" type="button">Remove Task</button>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Notes</label>
+					<textarea rows="12" cols="31" id="tnotes"></textarea>
+					<!--  resetTask is in overlay.js -->			
+					<button class="form-button" type="reset" onclick="resetTasks()">Reset</button>
+					<button class="form-button" type="button" onclick="submitTicket()">Save</button>
+				</div>
+			</form>
+		</div>
+		<div id="customerinfo" class="overlay-content">
+			<a class="cancel-overlay" onclick="closeOverlay()">x</a>
+			<form class="overlay-form" id="customerinfo" ?="">
+				<h2 class="tickethead">Customer Info<input id="ccustno" readonly="readonly" tabindex="-1" type="text"></h2>
+				<div class="form-group">
+					<label class="form-label">First Name</label>
+					<input id="cfirstname" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Last Name</label>
+					<input id="clastname" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Phone Number</label>
+					<input id="cphone" type="phone">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Ext</label>
+					<input id="cext" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Address</label>
+					<input id="caddress" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Postal Code</label>
+					<input id="czip" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Email</label>
+					<input id="cemail" type="email">
+				</div>
+				<div class="form-group">
+				</div>
+				<div class="form-group">
+					<button type="button" id="derp" class="form-button" onclick="submitCustomer();">Save</button>
+				</div>
+			</form>
+		</div>
+		<div id="paymentwindow" class="overlay-content">
+			<a class="cancel-overlay" onclick="closeOverlay()">x</a>
+			<form class="overlay-form" id="paymentwindow" ?="">
+				<h2 class="tickethead">Apply Payment<input id="ccustno" readonly="readonly" tabindex="-1" type="text"></h2>
+				<div class="form-group">
+					<label class="form-label">Pay</label>
+					<input id="pIDK" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Pay</label>
+					<input id="pLOL" type="text">
+				</div>
+				<div class="form-group">
+					<label class="form-label">Pay</label>
+					<input id="pWTF" type="text">
+				</div>
+				<div class="form-group">
+				</div>
+				<div class="form-group">
+					<button type="button" id="derp" class="form-button" onclick="submitPayment();">Pay</button>
+				</div>
+			</form>
+		</div>
+		<!-- End of overlay -->
+		<!--This is the div that adjusts the margins on the left and right.-->
+		<div id="wrapper">
+			<div id="banner">
+				<img src="localhost_files/logo_02.png">
+				<!--<button type="button" onclick="getTickets()">Refresh Tickets</button>-->
+				<a href="#" id="cross" onclick="newTicket()">
+				+
+				</a>
+			</div>
+			<div id="content">
+				<div class="tickethead">
+					<h3>Active Tickets</h3>
+				</div>
+				<!-- 
+					requires: overlay.js, database.php
+					required by: index.php
+					-->
+				<div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div>
+					<!--Test-->
+					<div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div><div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div><div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div><div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div><div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div><div id="ticketlist">
+					<div id="wrap">
+						<div class="tickethat">
+						</div>
+						<div class="ticket" id="4">
+							<div class="tickethead">
+								<table width="100%">
+									<tbody>
+										<h3 style="text-align:center;"><a onclick="editCust(555)">Curtis LayCrafts</a></h3>
+										<tr>
+											<td style="text-align:center;"><a onclick="editTicket(4)">Edit Ticket</a></td>				
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="ticketbody">
+								<table class="checkboxarea">
+									<tbody>
+										<tr>
+											<td width="60%">
+												<table>
+													<tbody>
+														<tr>
+															<td><input class="checkbox" type="checkbox"></td>
+															<td>Synergize</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+											<td width="40%">
+												<p>Status field set to "complete"</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table>
+									<td style="text-align:right;"> <a onclick="applyPayment(10)">Pay!Pickup</a> Total Owed</td>
+								</table>
+							</div>	
+						</div>
+						<div class="ticketboots">
+						</div>
+					</div>
+				
+					<!--End of test ticket
+					<div class="ticket" id="1">
+						<div class="tickethead">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td><a class="minimize">[ - ]</a></td>
+										<td>
+											<h3><a onclick="editCust(50)">Noel Blumenkamph</a></h3>
+										</td>
+										<td><a onclick="editTicket(1)">Edit Ticket</a></td>
+										<td><a onclick="applyPayment(10)">Pay!Pickup</a></td>
+										<td style="text-align:right;">Total Owed</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="ticketbody">
+							<table class="checkboxarea">
+								<tbody>
+									<tr>
+										<td width="60%">
+											<table>
+												<tbody>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Make it pop</td>
+													</tr>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Peel back the onion</td>
+													</tr>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Crystallize</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td width="40%">
+											<p>how can she ship?</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="ticket" id="6">
+						<div class="tickethead">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td><a class="minimize">[ - ]</a></td>
+										<td>
+											<h3><a onclick="editCust(11)">Margaret Cummings</a></h3>
+										</td>
+										<td><a onclick="editTicket(6)">Edit Ticket</a></td>
+										<td><a onclick="applyPayment(10)">Pay!Pickup</a></td>
+										<td style="text-align:right;">Total Owed</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="ticketbody">
+							<table class="checkboxarea">
+								<tbody>
+									<tr>
+										<td width="60%">
+											<table>
+												<tbody>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Innovate</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td width="40%">
+											<p>ajdfgaldfgahkfghakdfgkdfg</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="ticket" id="7">
+						<div class="tickethead">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td><a class="minimize">[ - ]</a></td>
+										<td>
+											<h3><a onclick="editCust(6)">Rina Mckee</a></h3>
+										</td>
+										<td><a onclick="editTicket(7)">Edit Ticket</a></td>
+										<td><a onclick="applyPayment(10)">Pay!Pickup</a></td>
+										<td style="text-align:right;">Total Owed</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="ticketbody">
+							<table class="checkboxarea">
+								<tbody>
+									<tr>
+										<td width="60%">
+											<table>
+												<tbody>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Peel back the onion</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td width="40%">
+											<p>reenuh r e n a reenuh re re re re nu-uh</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="ticket" id="3">
+						<div class="tickethead">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td><a class="minimize">[ - ]</a></td>
+										<td>
+											<h3><a onclick="editCust(7)">Sylvia Gill</a></h3>
+										</td>
+										<td><a onclick="editTicket(3)">Edit Ticket</a></td>
+										<td><a onclick="applyPayment(10)">Pay!Pickup</a></td>
+										<td style="text-align:right;">Total Owed</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="ticketbody">
+							<table class="checkboxarea">
+								<tbody>
+									<tr>
+										<td width="60%">
+											<table>
+												<tbody>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Crystallize</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td width="40%">
+											<p></p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="ticket" id="2">
+						<div class="tickethead">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td><a class="minimize">[ - ]</a></td>
+										<td>
+											<h3><a onclick="editCust(3)">Miriam Fletcher</a></h3>
+										</td>
+										<td><a onclick="editTicket(2)">Edit Ticket</a></td>
+										<td><a onclick="applyPayment(10)">Pay!Pickup</a></td>
+										<td style="text-align:right;">Total Owed</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="ticketbody">
+							<table class="checkboxarea">
+								<tbody>
+									<tr>
+										<td width="60%">
+											<table>
+												<tbody>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Crystallize</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td width="40%">
+											<p>Art or starchart? You decide.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="ticket" id="8">
+						<div class="tickethead">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td><a class="minimize">[ - ]</a></td>
+										<td>
+											<h3><a onclick="editCust(3)">Miriam Fletcher</a></h3>
+										</td>
+										<td><a onclick="editTicket(8)">Edit Ticket</a></td>
+										<td><a onclick="applyPayment(10)">Pay!Pickup</a></td>
+										<td style="text-align:right;">Total Owed</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="ticketbody">
+							<table class="checkboxarea">
+								<tbody>
+									<tr>
+										<td width="60%">
+											<table>
+												<tbody>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Peel back the onion</td>
+													</tr>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Crystallize</td>
+													</tr>
+													<tr>
+														<td><input class="checkbox" type="checkbox"></td>
+														<td>Make it pop</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td width="40%">
+											<p>Status field set to "complete"</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			-->
+				<!--End div ticketlist-->
+			</div>
+			<div id="footer">
+				<p>Project Snordgruv - 2015 <a href="#">{Logout}</a></p>
+			</div>
+		</div>
+		<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+		<div id="ui-timepicker-div" class="ui-timepicker ui-widget ui-helper-clearfix ui-corner-all " style="display: none;">
+			<table class="ui-timepicker-table ui-widget-content ui-corner-all">
+				<tbody>
+					<tr>
+						<td class="ui-timepicker-hours">
+							<div class="ui-timepicker-title ui-widget-header ui-helper-clearfix ui-corner-all">Hour</div>
+							<table class="ui-timepicker">
+								<tbody>
+									<tr>
+										<th rowspan="1" class="periods" scope="row">AM</th>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="8"><a class="ui-state-default ">08</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="9"><a class="ui-state-default ">09</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="10"><a class="ui-state-default ">10</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="11"><a class="ui-state-default ">11</a></td>
+										<td><span class="ui-state-default ui-state-disabled">&nbsp;</span></td>
+										<td><span class="ui-state-default ui-state-disabled">&nbsp;</span></td>
+										<td><span class="ui-state-default ui-state-disabled">&nbsp;</span></td>
+										<td><span class="ui-state-default ui-state-disabled">&nbsp;</span></td>
+										<td><span class="ui-state-default ui-state-disabled">&nbsp;</span></td>
+									</tr>
+									<tr>
+										<th rowspan="1" class="periods" scope="row">PM</th>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="12"><a class="ui-state-default ">12</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="13"><a class="ui-state-default ">13</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="14"><a class="ui-state-default ">14</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="15"><a class="ui-state-default ui-state-active">15</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="16"><a class="ui-state-default ">16</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="17"><a class="ui-state-default ">17</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="18"><a class="ui-state-default ">18</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="19"><a class="ui-state-default ">19</a></td>
+										<td class="ui-timepicker-hour-cell" data-timepicker-instance-id="#tduetime" data-hour="20"><a class="ui-state-default ">20</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+						<td class="ui-timepicker-minutes">
+							<div class="ui-timepicker-title ui-widget-header ui-helper-clearfix ui-corner-all">Minute</div>
+							<table class="ui-timepicker">
+								<tbody>
+									<tr>
+										<td class="ui-timepicker-minute-cell" data-timepicker-instance-id="#tduetime" data-minute="0"><a class="ui-state-default ui-state-active">00</a></td>
+									</tr>
+									<tr>
+										<td class="ui-timepicker-minute-cell" data-timepicker-instance-id="#tduetime" data-minute="30"><a class="ui-state-default ">30</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
